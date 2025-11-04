@@ -3,32 +3,42 @@
 #include<unordered_set>
 using namespace std;
 
+// hash method
 vector<vector<int>> threeSum(vector<int>& nums) {
-    unordered_map<int, int> numsMap;
-    vector<vector<int>>ans;
+    // create hash map
+    unordered_map<int, int> freq;
     for(int i = 0; i < nums.size(); i++){
-        numsMap[nums[i]]++;
+        freq[nums[i]]++;
     }
+    
+    vector<vector<int>> ans;
+    // setting 1st element
     for(int i = 0; i < nums.size(); i++){
-        if(numsMap[nums[i]] > 0){
-            numsMap[nums[i]]--;
-            unordered_set<int> visited;
+        int a = nums[i];
+        if(freq[a] >= 1){
+            freq[a]--;
+            unordered_set<int> visitedj;
+            //setting 2nd and 3rd
             for(int j = i + 1; j < nums.size(); j++){
-                if(numsMap[nums[j]] > 0){
-                    numsMap[nums[j]]--;
-                    if(visited.count(nums[j]) == 0 && numsMap[- nums[i] - nums[j]] > 0){
-                        vector<int> triplet = {nums[i], nums[j], - nums[i] - nums[j]};
-                        ans.push_back(triplet);
-                        visited.insert(nums[j]);
-                        visited.insert(- nums[i] - nums[j]);
+                int b = nums[j];
+                if(freq[b] >= 1){
+                    int c = - a - b;
+                    freq[b]--;
+                    if(freq[c] >= 1){
+                        if(!visitedj.count(b)){
+                            vector<int> triplet = {a, b, c};
+                            ans.push_back(triplet);
+                            visitedj.insert(b);
+                            visitedj.insert(c);
+                        }
                     }
-                    numsMap[nums[j]]++;
+                    freq[b]++;
                 }
-                
             }
             
+            freq[a] = 0;
         }
-        numsMap[nums[i]] = 0;
     }
+    
     return ans;
 }
